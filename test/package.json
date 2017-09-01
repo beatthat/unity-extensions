@@ -4,8 +4,11 @@
   "description": "",
   "author": "",
   "license": "MIT",
+  "scripts": {
+    "clean": "rm -rf node_modules package-lock.json yarn.lock Library Temp Assets"
+  },
   "dependencies": {
-    "unity-extensions": "github:beatthat/unity-extensions"
+    "unity-extensions": "../unity-extensions-0.0.2.tgz"
   },
   "devDependencies": {
     "babel-core": "^5.8.23",
