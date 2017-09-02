@@ -8,7 +8,7 @@ namespace BeatThat
 	/// <summary>
 	/// Extension methods for Unity's core classes, e.g. Component
 	/// </summary>
-	public static class UnityExtensions  
+	public static class UnityExtensions
 	{
 		/// <summary>
 		/// syntactic sugar. Lets you chain Min calls into a single line without using (allocatings) Mathf.Min(params float[]) overload.
@@ -67,19 +67,19 @@ namespace BeatThat
 			return targetObject.AddComponent(concreteType) as Component;
 		}
 
-		public static T AddIfMissing<T>(this Component c) 
+		public static T AddIfMissing<T>(this Component c)
 			where T : Component
 		{
 			return c.gameObject.AddIfMissing<T, T>();
 		}
 
-		public static I AddIfMissing<I, T>(this Component c) 
-			where I : class  
+		public static I AddIfMissing<I, T>(this Component c)
+			where I : class
 			where T : Component, I
 		{
 			return c.gameObject.AddIfMissing<I, T>();
 		}
-			
+
 		/// <summary>
 		/// If type matching interface (or base type) 'I' is missing adds a component of concrete type 'T' (which must implement 'I')
 		/// </summary>
@@ -87,7 +87,7 @@ namespace BeatThat
 		/// <param name="go">extension method 'this'</param>
 		/// <typeparam name="I">The interface type to look for.</typeparam>
 		/// <typeparam name="T">The concrete implementation type of I to add if no instance of I is found.</typeparam>
-		public static T AddIfMissing<T>(this GameObject go) 
+		public static T AddIfMissing<T>(this GameObject go)
 			where T : Component
 		{
 			return go.AddIfMissing<T, T>();
@@ -100,8 +100,8 @@ namespace BeatThat
 		/// <param name="go">extension method 'this'</param>
 		/// <typeparam name="I">The interface type to look for.</typeparam>
 		/// <typeparam name="T">The concrete implementation type of I to add if no instance of I is found.</typeparam>
-		public static I AddIfMissing<I, T>(this GameObject go) 
-			where I : class  
+		public static I AddIfMissing<I, T>(this GameObject go)
+			where I : class
 			where T : Component, I
 		{
 			I inst = go.GetComponent<I>();
@@ -109,6 +109,22 @@ namespace BeatThat
 				inst = go.AddComponent<T>();
 			}
 			return inst;
+		}
+
+		/// <summary>
+		/// Very expensive version of GameObject.FindObjectsOfType
+		/// that allows interface types.
+		/// Use only in very controlled circumstances.
+		/// </summary>
+		public static T FindObjectOfType<T>() where T : class
+		{
+			foreach(Object o in Object.FindObjectsOfType(typeof(Component))) {
+				var t = o as T;
+				if(t != null) {
+					return t;
+				}
+			}
+			return null;
 		}
 
 		public static void VisitAll<T>(this Component c, System.Action<T> visit)
@@ -119,15 +135,15 @@ namespace BeatThat
 		/// <summary>
 		/// Syntax sugar to perform an 'visit' action on all of a GameObject's child components of type T.
 		/// Includes components on inactive GameObjects.
-		/// 
+		///
 		/// example: activate all child renderers
-		/// 
+		///
 		/// <code>
 		/// this.gameObject.VisitAll<Renderer>((r) => {
 		/// 	r.enabled = true;
 		/// });
 		/// </code>
-		/// 
+		///
 		/// NOTE: it is better to use this function with a visit action that does NOT capture local params (to avoid allocation).
 		/// </summary>
 		/// <param name="go">extension method 'this'</param>
@@ -150,15 +166,15 @@ namespace BeatThat
 
 		/// <summary>
 		/// Same as GameObject::VisitAll but visits only components on active GameObjects
-		/// 
+		///
 		/// example: activate all child renderers
-		/// 
+		///
 		/// <code>
 		/// this.gameObject.VisitActive<Renderer>((r) => {
 		/// 	r.enabled = true;
 		/// });
 		/// </code>
-		/// 
+		///
 		/// NOTE: it is better to use this function with a visit action that does NOT capture local params (to avoid allocation).
 		/// </summary>
 		/// <param name="go">extension method 'this'</param>
@@ -178,7 +194,7 @@ namespace BeatThat
 		/// <summary>
 		/// Sets the position of a transform to align with some other transform.
 		/// Handles RectTransforms, setting their anchored position regardless of pivot.
-		/// 
+		///
 		/// Not tested for all cases, but useful when you have instantiated a RectTransform prefab
 		/// that has a non-center pivot point, and you want it to fill the exact space of it's new parent.
 		/// </summary>
@@ -192,7 +208,7 @@ namespace BeatThat
 			else {
 				startPosGlobal = match.position;
 			}
-				
+
 			var startPosLocal = (t.parent != null)? t.parent.InverseTransformPoint(startPosGlobal): startPosGlobal;
 
 
@@ -264,7 +280,7 @@ namespace BeatThat
 			if(includeInactive) {
 
 				using(var tmp = ListPool<T>.Get()) {
-					t.GetComponents<T>(tmp); 
+					t.GetComponents<T>(tmp);
 					results.AddRange(tmp);
 				}
 			}
@@ -279,7 +295,7 @@ namespace BeatThat
 				}
 			}
 		}
-			
+
 		public static T GetComponentInDirectChildren<T>(this Transform t, bool includeInactive = false) where T : class
 		{
 			T c = t.GetComponent<T>();
@@ -288,7 +304,7 @@ namespace BeatThat
 			}
 
 			foreach(Transform childT in t) {
-				if((c = childT.GetComponent<T>()) != null 
+				if((c = childT.GetComponent<T>()) != null
 					&& (includeInactive || (c as Component).gameObject.activeInHierarchy)) {
 					return c;
 				}
@@ -325,11 +341,11 @@ namespace BeatThat
 				}
 			}
 		}
-			
+
 		private static void GetComponentsInChildren<T>(Transform t, List<T> results, bool includeInactive = false, int depth = 0, int maxDepth = int.MaxValue) where T : class
 		{
-			if(depth > maxDepth) { 
-				return; 
+			if(depth > maxDepth) {
+				return;
 			}
 
 			// TODO: this needs to be retested. Seems like GetComponents may now be clearing the result list on every call???
@@ -343,7 +359,7 @@ namespace BeatThat
 				GetComponentsInChildren<T>(childT, results, includeInactive, depth + 1, maxDepth);
 			}
 		}
-	
+
 
 		public static void SetHideFlagsRecursively(this GameObject go, HideFlags flags)
 		{
@@ -382,22 +398,22 @@ namespace BeatThat
 			return false;
 		}
 
-		static public string Path(this Component c) 
+		static public string Path(this Component c)
 		{
 			return GetPath((c is Transform)? c as Transform: c.transform);
 		}
 
-		static public string Path(this GameObject go) 
+		static public string Path(this GameObject go)
 		{
 			return GetPath(go.transform);
 		}
-			
-		static public string Path(this Transform t) 
+
+		static public string Path(this Transform t)
 		{
 			return GetPath(t);
 		}
 
-		static public string PathFrom(this Transform t, Transform root) 
+		static public string PathFrom(this Transform t, Transform root)
 		{
 			return GetPathFrom(t, root);
 		}
@@ -505,7 +521,7 @@ namespace BeatThat
 		{
 			go.transform.Encapsulate(ref bounds);
 		}
-			
+
 		public static void Encapsulate(this Component c, ref Bounds bounds)
 		{
 			var b = c.GetComponent<IHasBounds>();
@@ -529,7 +545,7 @@ namespace BeatThat
 			}
 
 			var t = c.transform;
-				
+
 			for(int i = 0; i < t.childCount; i++) {
 				Encapsulate(t.GetChild(i), ref bounds);
 			}
@@ -554,7 +570,7 @@ namespace BeatThat
 
 			var c = go.GetComponent<T>();
 			if(c == null) {
-				Debug.LogWarning("[" + Time.frameCount + "][" + caller.Path() + "] object with tag '" 
+				Debug.LogWarning("[" + Time.frameCount + "][" + caller.Path() + "] object with tag '"
 					+ tag + "' is missing " + typeof(T).Name + " component");
 			}
 
