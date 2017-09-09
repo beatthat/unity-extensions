@@ -1,6 +1,7 @@
 {
   "name": "unity-extensions",
-  "version": "0.0.4",
+  "scope": "ape",
+  "version": "0.0.5",
   "description": "extensions",
   "main": "index.js",
   "repository": {
@@ -21,12 +22,13 @@
   "scripts": {
     "postinstall": "node scripts/postinstall.js",
     "install:test": "rm -f *.tgz && npm pack && cd test && npm run clean && npm install",
-    "clean": "rm -f *.tgz && cd test && npm run clean"
+    "clean": "rm -f *.tgz && cd test && npm run clean",
+    "sync:test2src": "rsync -rv --include '*/' --include '*.cs' --exclude '*' --prune-empty-dirs test/Assets/Plugins/${npm_package_scope}/${npm_package_name}/ ./src/${npm_package_name}/"
   },
   "dependencies": {
     "ncp": "^2.0.0",
     "mkdirp": "^0.5.1",
-    "unity-pools": "beatthat/unity-pools#semver:^0.0.5",
-    "unity-properties": "beatthat/unity-properties#semver:^0.0.6"
+    "pools": "beatthat/pools#semver:^0.0.7",
+    "utils": "beatthat/utils#semver:^0.0.6"
   }
 }
