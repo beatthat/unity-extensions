@@ -1,7 +1,7 @@
 {
   "name": "unity-extensions",
   "scope": "ape",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "extensions",
   "main": "index.js",
   "repository": {
@@ -29,6 +29,7 @@
   "dependencies": {
     "ncp": "^2.0.0",
     "mkdirp": "^0.5.1",
-    "pools": "beatthat/pools#semver:^0.0.7"
+    "pools": "beatthat/pools#semver:^0.0.7",
+    "transform-path-ext": "beatthat/transform-path-ext#semver:^0.0.1"
   }
 }
