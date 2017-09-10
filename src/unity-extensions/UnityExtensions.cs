@@ -38,22 +38,6 @@ namespace BeatThat
 
 			return (float)tex.height / (float)tex.width;
 		}
-			
-		/// <summary>
-		/// Very expensive version of GameObject.FindObjectsOfType
-		/// that allows interface types.
-		/// Use only in very controlled circumstances.
-		/// </summary>
-		public static T FindObjectOfType<T>() where T : class
-		{
-			foreach(Object o in Object.FindObjectsOfType(typeof(Component))) {
-				var t = o as T;
-				if(t != null) {
-					return t;
-				}
-			}
-			return null;
-		}
 
 		public static void VisitAll<T>(this Component c, System.Action<T> visit)
 		{
@@ -158,29 +142,6 @@ namespace BeatThat
 
 
 
-		public static void SetHideFlagsRecursively(this GameObject go, HideFlags flags)
-		{
-			go.hideFlags = flags;
-			foreach(Transform c in go.transform) {
-				SetHideFlagsRecursively(c.gameObject, flags);
-			}
-		}
-
-		// Recursively set the layer of this object and all its children
-		public static void SetLayerRecursively(this GameObject go, int newLayer, bool includeInactive = false)
-		{
-			using(var tmp = ListPool<Transform>.Get()) {
-
-				go.layer = newLayer;
-
-				go.GetComponentsInChildren<Transform>(true, tmp);
-
-				foreach(var c in tmp) {
-					c.gameObject.layer = newLayer;
-				}
-			}
-		}
-
 		/// <summary>
 		/// Determines whether Transform t2 is an ancestor (parent or beyond) of the caller.
 		/// </summary>
@@ -199,27 +160,6 @@ namespace BeatThat
 		public static Color WithAlpha(this Color c, float a)
 		{
 			return new Color(c.r, c.g, c.b, a);
-		}
-
-		public static T FindByTag<T>(this GameObject caller, string tag) where T : Component
-		{
-			if(string.IsNullOrEmpty(tag)) {
-				return null;
-			}
-
-			var go = GameObject.FindGameObjectWithTag(tag);
-			if(go == null) {
-				Debug.LogWarning("[" + Time.frameCount + "][" + caller.Path() + "] failed to find " + typeof(T).Name + " by tag '" + tag + "'");
-				return null;
-			}
-
-			var c = go.GetComponent<T>();
-			if(c == null) {
-				Debug.LogWarning("[" + Time.frameCount + "][" + caller.Path() + "] object with tag '"
-					+ tag + "' is missing " + typeof(T).Name + " component");
-			}
-
-			return c;
 		}
 	}
 }

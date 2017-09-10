@@ -1,7 +1,7 @@
 {
   "name": "unity-extensions",
   "scope": "ape",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "extensions",
   "main": "index.js",
   "repository": {
