@@ -133,15 +133,6 @@ namespace BeatThat
 			}
 		}
 
-		public static RectTransform GetViewport(this ScrollRect scrollRect)
-		{
-			// Analysis disable ConvertConditionalTernaryToNullCoalescing
-			return scrollRect.viewport != null? scrollRect.viewport: scrollRect.transform as RectTransform;
-			// Analysis restore ConvertConditionalTernaryToNullCoalescing
-		}
-
-
-
 		/// <summary>
 		/// Determines whether Transform t2 is an ancestor (parent or beyond) of the caller.
 		/// </summary>
