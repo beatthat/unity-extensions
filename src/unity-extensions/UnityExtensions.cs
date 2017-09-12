@@ -133,20 +133,6 @@ namespace BeatThat
 			}
 		}
 
-		/// <summary>
-		/// Determines whether Transform t2 is an ancestor (parent or beyond) of the caller.
-		/// </summary>
-		public static bool IsAncestorOf(this Transform t, Transform t2)
-		{
-			Transform p = t2;
-			while((p = p.parent) != null) {
-				if(p == t) {
-					return true;
-				}
-			}
-			return false;
-		}
-
 
 		public static Color WithAlpha(this Color c, float a)
 		{
